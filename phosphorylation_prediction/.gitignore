@@ -246,13 +246,14 @@ $RECYCLE.BIN/
 *.joblib
 
 # Large datasets
+data/
 data/raw/
 data/processed/
 data/external/
 data/interim/
 
 # Experiment outputs
-experiments/
+# experiments/
 results/
 outputs/
 logs/
@@ -262,7 +263,7 @@ wandb/
 # Checkpoints and saved models
 checkpoints/
 saved_models/
-models/
+# models/
 
 # Temporary files
 tmp/
@@ -411,7 +412,3 @@ docs/api/
 
 # Keep important empty directories
 !**/.gitkeep
-
-labels.xlsx
-plan.md
-Sequence_data.txt
