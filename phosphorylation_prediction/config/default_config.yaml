@@ -1,0 +1,73 @@
+experiment:
+  project_name: "phosphorylation_prediction"
+  run_name: null  # Auto-generated if null
+  seed: 42
+  device: "cuda"
+  num_workers: 4
+  
+wandb:
+  entity: null
+  project: "phospho-prediction"
+  tags: ["baseline"]
+  log_frequency: 50
+  log_predictions: true
+  
+data:
+  sequence_col: "Sequence"
+  position_col: "Position"
+  target_col: "target"
+  protein_id_col: "Header"
+  window_size: 10
+  max_sequence_length: 5000
+  
+preprocessing:
+  balance_classes: true
+  augmentation: false
+  
+features:
+  use_aac: true
+  use_dpc: true
+  use_tpc: true
+  use_binary: true
+  use_physicochemical: true
+  
+cross_validation:
+  n_folds: 5
+  strategy: "stratified_group"  # Stratified by target, grouped by protein
+  
+xgboost:
+  n_estimators: 1000
+  max_depth: 6
+  learning_rate: 0.1
+  subsample: 0.8
+  colsample_bytree: 0.8
+  early_stopping_rounds: 50
+  eval_metric: ["logloss", "auc"]
+  use_gpu: false
+  
+transformer:
+  model_name: "facebook/esm2_t6_8M_UR50D"
+  max_length: 64
+  batch_size: 32
+  learning_rate: 2e-5
+  num_epochs: 10
+  warmup_steps: 500
+  gradient_accumulation_steps: 4
+  fp16: true
+  dropout_rate: 0.3
+  window_context: 3
+  
+ensemble:
+  methods:
+    voting:
+      strategy: "soft"  # soft or hard
+      weights: "optimize"  # optimize, equal, or list
+    stacking:
+      meta_learner: "logistic_regression"
+      use_probas: true
+      cv_predictions: true
+    blending:
+      blend_ratio: 0.2
+    dynamic:
+      k_neighbors: 5
+      similarity_metric: "cosine"
